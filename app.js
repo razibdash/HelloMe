@@ -9,7 +9,8 @@ const usersRouter=require('./router/usersRouter');
 const inboxRouter=require('./router/inboxRouter');
 
 //internal imports...........
-const {notFoundHandler,errorHandler}=require('./middlewares/common/eroorHandler')
+const {notFoundHandler,errorHandler}=require('./middlewares/common/eroorHandler');
+const decorateHtmlResponse=require('./middlewares/common/decorateHtmlResponse');
 
 //craate express app...........
 const app=express();

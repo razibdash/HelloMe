@@ -1,8 +1,6 @@
 //Get Login Page
 function getUser(req,res,next){
-    res.render('users',{
-      title:"users -Hello Me",
-    });
+    res.render('users');
   }
   
   module.exports={

@@ -1,6 +1,6 @@
 const uploader=require('../../utilities/singleUploader');
 const avatarUpload=(req,res,next)=>{
-
+  console.log(req.body);
 const upload=uploader(
     "avatars",
     ['image/jpeg','image/jpg','image/png'],

@@ -4,7 +4,7 @@ const dotenv=require('dotenv');
 const path=require('path');
 const  mongoose  = require('mongoose');
 const cookieParser = require('cookie-parser');
-
+const bodyParser=require('body-parser');
 
 //internal imports...........
 const loginRouter=require('./router/loginRouter');
@@ -27,6 +27,8 @@ mongoose.connect(process.env.MONGO_CONNECTION_STRING)
 //request parser........
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
+app.use(bodyParser.json()); // For parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); 
 
 //set view engine.........
 app.set('view engine','ejs');

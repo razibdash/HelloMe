@@ -1,6 +1,5 @@
 //external imports
 const express=require('express');
-const {check}=require('express-validator')
 
 //internal imports
 const {getUser, addUser}=require('../controller/usersController');
@@ -14,6 +13,7 @@ const router=express.Router();
 router.get('/',decorateHtmlResponse('Users'),getUser);
 //add user
 router.post('/',avatarUpload,addUserValidator,addUserValidationHandler,addUser);
+
 
 
 

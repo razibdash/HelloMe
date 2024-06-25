@@ -1,5 +1,6 @@
 const uploader=require('../../utilities/singleUploader');
 const avatarUpload=(req,res,next)=>{
+
 const upload=uploader(
     "avatars",
     ['image/jpeg','image/jpg','image/png'],
@@ -10,6 +11,7 @@ const upload=uploader(
   //call the middleware function
   upload.any()(req,res,(err)=>{
     if(err){
+      console.log(err);
       res.status(500).json({
         errors:{
             avatar:{

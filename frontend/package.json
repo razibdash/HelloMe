@@ -2,6 +2,7 @@
   "name": "frontend",
   "private": true,
   "version": "0.0.0",
+  "proxy": "http://127.0.0.1:5000",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,8 +11,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.8.2",
+    "@emotion/react": "^11.13.0",
+    "@emotion/styled": "^11.13.0",
+    "axios": "^1.7.2",
+    "framer-motion": "^11.3.19",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.25.1"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",

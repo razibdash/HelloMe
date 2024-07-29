@@ -1,0 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400&family=Raleway:ital,wght@0,100..900;1,100..900&family=Rubik:wght@300&family=Source+Code+Pro&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+.App{
+    background-color: #B7F1E9;
+    height:100lvh;
+    /* background-image: url('/bg.webp');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover; */
+}

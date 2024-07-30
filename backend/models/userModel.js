@@ -7,7 +7,8 @@ const userModel=mongoose.Schema({
     },
     email:{
         type:String,
-        required:true
+        required:true,
+        unique:true
     },
     password:{
         type:String,
@@ -15,7 +16,6 @@ const userModel=mongoose.Schema({
     },
     picture:{
         type:String,
-        required:true,
         default:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7Cw8atL3Modu50-P0FRxNgMg6gDH6R9bDAIT6huM6spIw_IzLyfuE6gKpvQ6NqqSdsKA&usqp=CAU"
     },
     

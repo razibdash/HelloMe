@@ -1,4 +1,6 @@
 import { useState } from "react";
+import axios from "axios";
+import { useHistory } from "react-router-dom";
 import { Button, useToast } from "@chakra-ui/react";
 function SignUp() {
   const userData = {
@@ -11,12 +13,10 @@ function SignUp() {
   const [user, setUser] = useState(userData);
   const [loading, setLoading] = useState(false);
   const toast = useToast();
+  const history = useHistory();
   const handleChnage = (e) => {
     const { name, value } = e.target;
     setUser({ ...user, [name]: value });
-  };
-  const handleFile = (e) => {
-    setUser({ ...user, pic: e.target.files[0] });
   };
   const postDetails = (pics) => {
     setLoading(true);
@@ -28,19 +28,17 @@ function SignUp() {
         isClosable: true,
         position: "bottom",
       });
+      return;
     }
     if (pics.type === "image/jpeg" || pics.type === "image/png") {
       const data = new FormData();
-      data.append("file", user.pic);
+      data.append("file", pics);
       data.append("upload_preset", "chat-app");
       data.append("cloud_name", "razibdash");
-      fetch(
-        "cloudinary://743135414454945:wTVRHBXmy3O-aD0a5jN2BIjt_OM@razibdash",
-        {
-          method: "post",
-          body: data,
-        }
-      )
+      fetch("https://api.cloudinary.com/v1_1/razibdash/image/upload", {
+        method: "post",
+        body: data,
+      })
         .then((res) => res.json())
         .then((data) => {
           setUser({ ...user, pic: data.url.toString() });
@@ -61,7 +59,55 @@ function SignUp() {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(user);
+    setLoading(true);
+    if (!user.name || !user.email || !user.password || !user.confirmpassword) {
+      toast({
+        title: "please Fill all the Feilds",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+      return;
+    }
+    if (user.password !== user.confirmpassword) {
+      toast({
+        title: "password do Not Match",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      return;
+    }
+    try {
+      const config = {
+        headers: {
+          "Content-type": "aplication/json",
+        },
+      };
+      const { data } = axios.post("api/user", user, config);
+      toast({
+        title: "Registration Successful",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      localStorage.getItem("userInfo", JSON.stringify(data));
+      setLoading(false);
+      history.push("/chats");
+    } catch (error) {
+      toast({
+        title: "Error Occured!",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+    }
   };
   return (
     <div>
@@ -131,7 +177,7 @@ function SignUp() {
       hover:file:bg-violet-100"
             type="file"
             name="file"
-            onChange={handleFile}
+            onChange={(e) => postDetails(e.target.files[0])}
             required
           />
         </div>

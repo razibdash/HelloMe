@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import { Button, useToast } from "@chakra-ui/react";
 function SignUp() {
   const userData = {
     name: "",
@@ -9,6 +9,8 @@ function SignUp() {
     pic: "",
   };
   const [user, setUser] = useState(userData);
+  const [loading, setLoading] = useState(false);
+  const toast = useToast();
   const handleChnage = (e) => {
     const { name, value } = e.target;
     setUser({ ...user, [name]: value });
@@ -16,7 +18,47 @@ function SignUp() {
   const handleFile = (e) => {
     setUser({ ...user, pic: e.target.files[0] });
   };
-
+  const postDetails = (pics) => {
+    setLoading(true);
+    if (pics === undefined) {
+      toast({
+        title: "please select an image.",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+    }
+    if (pics.type === "image/jpeg" || pics.type === "image/png") {
+      const data = new FormData();
+      data.append("file", user.pic);
+      data.append("upload_preset", "chat-app");
+      data.append("cloud_name", "razibdash");
+      fetch(
+        "cloudinary://743135414454945:wTVRHBXmy3O-aD0a5jN2BIjt_OM@razibdash",
+        {
+          method: "post",
+          body: data,
+        }
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          setUser({ ...user, pic: data.url.toString() });
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    } else {
+      toast({
+        title: "please select an image.",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+    }
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(user);
@@ -94,11 +136,13 @@ function SignUp() {
           />
         </div>
         <div className="mt-2">
-          <input
+          <Button
             className="bg-[#14c871] text-stone-50 mt-4 py-2 px-4 rounded-lg uppercase text-1xl font-semibold cursor-pointer"
             type="submit"
-            value="Sign Up"
-          />
+            isLoading={loading}
+          >
+            Sign Up
+          </Button>
         </div>
       </form>
     </div>

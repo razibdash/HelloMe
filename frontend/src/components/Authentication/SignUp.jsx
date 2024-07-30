@@ -1,6 +1,5 @@
 import { useState } from "react";
 import axios from "axios";
-import { useHistory } from "react-router-dom";
 import { Button, useToast } from "@chakra-ui/react";
 function SignUp() {
   const userData = {
@@ -13,7 +12,7 @@ function SignUp() {
   const [user, setUser] = useState(userData);
   const [loading, setLoading] = useState(false);
   const toast = useToast();
-  const history = useHistory();
+
   const handleChnage = (e) => {
     const { name, value } = e.target;
     setUser({ ...user, [name]: value });
@@ -57,7 +56,7 @@ function SignUp() {
       });
     }
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     if (!user.name || !user.email || !user.password || !user.confirmpassword) {
@@ -84,10 +83,10 @@ function SignUp() {
     try {
       const config = {
         headers: {
-          "Content-type": "aplication/json",
+          "Content-Type": "application/json",
         },
       };
-      const { data } = axios.post("api/user", user, config);
+      await axios.post("http://localhost:5000/api/user/", user, config);
       toast({
         title: "Registration Successful",
         status: "success",
@@ -95,10 +94,10 @@ function SignUp() {
         isClosable: true,
         position: "bottom",
       });
-      localStorage.getItem("userInfo", JSON.stringify(data));
+      // localStorage.getItem("userInfo", JSON.stringify(res.data));
       setLoading(false);
-      history.push("/chats");
     } catch (error) {
+      console.log(error.message);
       toast({
         title: "Error Occured!",
         status: "error",
@@ -111,7 +110,7 @@ function SignUp() {
   };
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <form method="post" encType="multipart/form-data">
         <div className="mt-2">
           <label className="text-stone-400" htmlFor="">
             Name
@@ -186,6 +185,7 @@ function SignUp() {
             className="bg-[#14c871] text-stone-50 mt-4 py-2 px-4 rounded-lg uppercase text-1xl font-semibold cursor-pointer"
             type="submit"
             isLoading={loading}
+            onClick={handleSubmit}
           >
             Sign Up
           </Button>

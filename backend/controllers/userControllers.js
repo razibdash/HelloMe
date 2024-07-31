@@ -40,7 +40,6 @@ const registerUser=expressAsyncHandler(async(req,res)=>{
 const authUser=async(req,res)=>{
    try {
      const {email,password}=req.body;
-     console.log(email,password);
      const user=await User.findOne({email:email});
     const comparePassword=await bcrypt.compare(password, user.password);
             if(user && comparePassword===true ){
@@ -60,7 +59,22 @@ const authUser=async(req,res)=>{
             console.log(error);
         }
 }
+
+const allUser=async(req,res)=>{
+  const keyword=req.query.search?{
+    $or:[
+         {name:{$regex:
+          req.query.search,$options:"i"}},
+         {email:{$regex:
+          req.query.search,$options:"i"}}
+    ]
+  }:{};
+  const users=await User.find(keyword).find({_id:{$ne:req.user._id} });
+  res.send(users);
+ 
+}
 module.exports={
     registerUser,
-    authUser
+    authUser,
+    allUser
 }

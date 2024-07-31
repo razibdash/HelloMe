@@ -1,5 +1,7 @@
+import { useToast } from "@chakra-ui/react";
 import { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 function Login() {
   const userData = {
     email: "",
@@ -10,9 +12,65 @@ function Login() {
     const { name, value } = e.target;
     setUser({ ...user, [name]: value });
   };
+  //navigator
+  const navigate = useNavigate();
+  //Toest
+  const toast = useToast();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!user.email || !user.password) {
+      toast({
+        title: "please Fill all the Feilds",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      axios
+        .post("http://localhost:5000/api/user/login", user, config)
+        .then((result) => {
+          console.log(result.data);
+          if (result.data.status === "Success") {
+            toast({
+              title: "login Successful",
+              status: "success",
+              duration: 5000,
+              isClosable: true,
+              position: "top",
+            });
+            navigate("/chats");
+          } else {
+            toast({
+              title: "Error Occured!",
+              status: "error",
+              duration: 5000,
+              isClosable: true,
+              position: "top",
+            });
+          }
+        });
+    } catch (error) {
+      console.log(error.message);
+      toast({
+        title: "Error Occured!",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+  };
   return (
     <>
-      <form action="">
+      <form onSubmit={handleSubmit} method="post">
         <div className="mt-2">
           <label className="text-stone-400" htmlFor="">
             Email

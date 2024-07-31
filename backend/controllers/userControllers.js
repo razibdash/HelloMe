@@ -37,9 +37,10 @@ const registerUser=expressAsyncHandler(async(req,res)=>{
   }
 });
 
-const authUser=expressAsyncHandler(async(req,res)=>{
+const authUser=async(req,res)=>{
    try {
      const {email,password}=req.body;
+     console.log(email,password);
      const user=await User.findOne({email:email});
     const comparePassword=await bcrypt.compare(password, user.password);
             if(user && comparePassword===true ){
@@ -49,15 +50,16 @@ const authUser=expressAsyncHandler(async(req,res)=>{
                     email:user.email,
                     picture:user.picture,
                     token:generateToken(user._id),
+                    status:"Success",
                 });
             }else{
                 res.status(201).json("Authentication Faild!");
             }
 
         } catch (error) {
-            console.log(error.message);
+            console.log(error);
         }
-})
+}
 module.exports={
     registerUser,
     authUser

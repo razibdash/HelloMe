@@ -1,5 +1,7 @@
 const Chat=require('../models/chatModel');
 const User=require('../models/userModel');
+const asyncHandler=require('express-async-handler')
+
 const accessChat=async(req,res)=>{
   const{userId}=req.body;
 
@@ -100,26 +102,28 @@ const renameGroup=async(req,res)=>{
 
 }
 
-const addToGroup=async(req,res)=>{
+const addToGroup=asyncHandler(async(req,res)=>{
   const{chatId,userId}=req.body;
   const added=await Chat.findById(
-        chatId,
+       chatId,
         {
-          $push:{users:userId}
-      },
-      {
-        new:true,
-      }
+          $push:{users:userId},
+         
+        },
+        {
+          new:true,
+        }
   ).populate("users",'-password').populate('groupAdmin','-password');
+ 
     if(!added){
       res.status(404);
       throw new Error("Chat Not found!");
     }else{
       res.json(added);
     }
-}
+})
 
-const removeFromGroup=async(req,res)=>{
+const removeFromGroup=asyncHandler(async(req,res)=>{
   const{chatId,userId}=req.body;
   const remove=await Chat.findById(
         chatId,
@@ -136,7 +140,7 @@ const removeFromGroup=async(req,res)=>{
     }else{
       res.json(remove);
     }
-}
+})
 module.exports={
   accessChat,
   fetchChat,

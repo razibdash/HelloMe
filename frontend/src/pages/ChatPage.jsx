@@ -14,7 +14,6 @@ function ChatPage() {
         {user && <MyChat />}
         {user && <ChatBox />}
       </Box>
-      <h1>HELLO</h1>
     </div>
   );
 }

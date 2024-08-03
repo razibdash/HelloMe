@@ -78,6 +78,7 @@ function SignUp() {
         isClosable: true,
         position: "bottom",
       });
+      setLoading(false);
       return;
     }
     try {
@@ -86,7 +87,11 @@ function SignUp() {
           "Content-Type": "application/json",
         },
       };
-      await axios.post("http://localhost:5000/api/user/", user, config);
+      const { data } = await axios.post(
+        "http://localhost:5000/api/user/",
+        user,
+        config
+      );
       toast({
         title: "Registration Successful",
         status: "success",
@@ -94,7 +99,7 @@ function SignUp() {
         isClosable: true,
         position: "bottom",
       });
-      // localStorage.getItem("userInfo", JSON.stringify(res.data));
+      localStorage.setItem("userInfo", JSON.stringify(data));
       setLoading(false);
     } catch (error) {
       console.log(error.message);

@@ -29,17 +29,22 @@ function ProfileModal({ user, children }) {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader
-            fontSize="40px"
+            fontSize="30px"
             fontFamily="Work sans"
             d="flex"
             justifyContent="center"
           >
-            {user}
+            {user.name}
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
-            <Image borderRadius="full" boxSize="150px" src="dfkjh" alt={user} />
-            <Text>Email:</Text>
+          <ModalBody className="flex flex-col justify-center items-center">
+            <Image
+              borderRadius="full"
+              boxSize="150px"
+              src={user.picture}
+              alt={user.name}
+            />
+            <Text className="text-stone-400 mt-4 ">Email: {user.email}</Text>
           </ModalBody>
 
           <ModalFooter>

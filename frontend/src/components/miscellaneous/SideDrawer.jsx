@@ -85,23 +85,22 @@ function SideDrawer() {
       });
     }
   };
+
   const accessChat = async (userId) => {
     try {
       setLoading(true);
       const config = {
         headers: {
-          "Content-type": "aplication/json",
           Authorization: `Bearer ${user.token}`,
         },
       };
-
       const { data } = await axios.post(
         "http://localhost:5000/api/chat",
         { userId },
         config
       );
+      if (!chats.find((c) => c._id === data._id)) setChats([...chats, data]);
 
-      console.log(data);
       setSelectedChat(data);
       setLoadingChat(false);
       onClose();

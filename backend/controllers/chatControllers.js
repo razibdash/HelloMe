@@ -4,7 +4,6 @@ const asyncHandler=require('express-async-handler')
 
 const accessChat=async(req,res)=>{
   const{userId}=req.body;
-
   if(!userId){
     console.log("userId param not sent");
     return res.sendStatus(400);

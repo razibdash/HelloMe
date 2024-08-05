@@ -3,6 +3,7 @@ const User=require('../models/userModel');
 const asyncHandler=require('express-async-handler')
 
 const accessChat=async(req,res)=>{
+  console.log(req.body);
   const{userId}=req.body;
   if(!userId){
     console.log("userId param not sent");
@@ -41,6 +42,7 @@ const accessChat=async(req,res)=>{
 }
 
 const fetchChat=async(req,res)=>{
+  
   try {
    const fetchChat=await Chat.find({users:{$elemMatch:{$eq:req.user._id}}}).populate('users','-password').populate('groupAdmin','-password').populate('latestMessage').sort({updateAt:-1})
    .then(async(results)=>{
@@ -52,7 +54,7 @@ const fetchChat=async(req,res)=>{
    })
   
   } catch (error) {
-    console.log(error.message);
+    console.log(error.message+"Error");
   }
 }
 

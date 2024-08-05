@@ -9,7 +9,7 @@ function ChatPage() {
   return (
     <div className="w-full">
       {user && <SideDrawer user={user} />}
-      <Box className="flex">
+      <Box className="flex justify-between m-2 gap-4">
         {user && <MyChat />}
         {user && <ChatBox />}
       </Box>

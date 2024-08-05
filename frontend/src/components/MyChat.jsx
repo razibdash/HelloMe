@@ -42,7 +42,7 @@ function MyChat() {
 
   return (
     <Box
-      d={{ base: seletedChat ? "none" : "flex", md: "flex" }}
+      display={{ base: seletedChat ? "none" : "flex", md: "flex" }}
       flexDir="column"
       alignItems="center"
       className=" bg-stone-50 shadow mt-2"
@@ -62,7 +62,7 @@ function MyChat() {
         MyChats
       </Box>
       <Box
-        d="flex"
+        display="flex"
         flexDir="column"
         p={3}
         bg="#F8F8F8"
@@ -86,13 +86,6 @@ function MyChat() {
                 borderRadius="lg"
               >
                 <Text>
-                  <Avatar
-                    mr={2}
-                    size="sm"
-                    cursor="pointer"
-                    name=""
-                    src={chat.users[index].picture}
-                  />
                   {!chat.isGroupChat
                     ? getSender(loggedUser, chat.users)
                     : chat.chatName}

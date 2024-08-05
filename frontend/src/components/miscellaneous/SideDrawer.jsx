@@ -70,7 +70,6 @@ function SideDrawer() {
         `http://localhost:5000/api/user?search=${search}`,
         config
       );
-      if (!chats.find((c) => c._id === data._id)) setChats([...chats, data]);
 
       setLoading(false);
       setSearchResult(data);

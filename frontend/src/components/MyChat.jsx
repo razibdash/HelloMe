@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { ChatState } from "../context/ChatProvider";
-import { Avatar, Box, Stack, Text, useToast } from "@chakra-ui/react";
+import { Box, Stack, Text, useToast } from "@chakra-ui/react";
 import axios from "axios";
 import ChatLoading from "./ChatLoading";
 import { getSender } from "../config/ChatLogic";
 
-function MyChat() {
+function MyChat({ fetchAgain }) {
   const { user, seletedChat, setSelectedChat, chats, setChats } = ChatState();
   const [loggedUser, setLoggerdUser] = useState();
   const toast = useToast();
@@ -38,7 +38,7 @@ function MyChat() {
   useEffect(() => {
     setLoggerdUser(JSON.parse(localStorage.getItem("userInfo")));
     fetchChats();
-  }, []);
+  }, [fetchAgain]);
 
   return (
     <Box
@@ -54,7 +54,7 @@ function MyChat() {
         pb={3}
         px={3}
         fontSize={{ base: "28px", md: "30px" }}
-        d="flex"
+        display="flex"
         w="100%"
         justifyContent="center"
         alignItems="center"
@@ -66,20 +66,19 @@ function MyChat() {
         flexDir="column"
         p={3}
         bg="#F8F8F8"
-        w="100%"
+        width="100%"
         h="70vh"
         borderRadius="lg"
         overflow="hidden"
       >
         {chats ? (
           <Stack overflowY="scroll">
-            {chats.map((chat, index) => (
+            {chats.map((chat) => (
               <Box
-                className="hover:bg-[#38B2AC]"
                 onClick={() => setSelectedChat(chat)}
                 cursor="pointer"
-                bg={seletedChat == chat ? "#38B2AC" : "#E8E8E8"}
-                color={seletedChat == chat ? "white" : "black"}
+                bg={seletedChat === chat ? "#38B2AC" : "#E8E8E8"}
+                color={seletedChat === chat ? "white" : "black"}
                 px={3}
                 py={2}
                 key={chat._id}

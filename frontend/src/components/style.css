@@ -1,0 +1,9 @@
+.message{
+   display: flex;
+   flex-direction: column;
+   overflow-y: scroll;
+   scrollbar-width: none;
+   scroll-margin: 0px;
+   scroll-behavior: smooth;
+   height: 400px 
+}

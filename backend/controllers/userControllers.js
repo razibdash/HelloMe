@@ -40,7 +40,9 @@ const registerUser=expressAsyncHandler(async(req,res)=>{
 const authUser=async(req,res)=>{
    try {
      const {email,password}=req.body;
+
      const user=await User.findOne({email:email});
+     
     const comparePassword=await bcrypt.compare(password, user.password);
             if(user && comparePassword===true ){
                 res.status(201).json({

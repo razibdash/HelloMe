@@ -4,7 +4,11 @@ import { Box, FormControl, Spinner, Text, useToast } from "@chakra-ui/react";
 import ProfileModal from "./miscellaneous/ProfileModal";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import "./style.css";
 import ScrollableChat from "./ScrollableChat";
+import io from "socket.io-client";
+const ENDPOINT = "http://localhost:5000";
+let socket, selectedChatCompare;
 function SingleChat({ fetchAgain, setFetchAgain }) {
   const { user, selectedChat, setSelectedChat } = ChatState();
 
@@ -12,7 +16,10 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
   const [message, setMessage] = useState([]);
   const [newMessage, setNewMessage] = useState();
   const [loading, setLoading] = useState(false);
+  const [soketConnected, setSocketConnected] = useState(false);
+
   const toast = useToast();
+
   // this is hander section
   const fetchMessaage = async () => {
     if (!selectedChat) return;
@@ -26,9 +33,9 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
         `http://localhost:5000/api/message/${selectedChat._id}`,
         config
       );
-      console.log(message);
       setMessage(data);
       setLoading(true);
+      socket.emit("join chat", selectedChat._id);
     } catch (error) {
       toast({
         title: "Error Occured!",
@@ -40,6 +47,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
       });
     }
   };
+
   const sendMessage = async (e) => {
     if (e.key === "Enter" && newMessage) {
       try {
@@ -48,6 +56,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
             Authorization: `Bearer ${user.token}`,
           },
         };
+        setNewMessage("");
         const { data } = await axios.post(
           "http://localhost:5000/api/message",
           {
@@ -56,7 +65,8 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
           },
           config
         );
-        setNewMessage("");
+
+        socket.emit("new message", data);
         setMessage([...message, data]);
       } catch (error) {
         console.log(error.message);
@@ -71,13 +81,36 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
       }
     }
   };
+
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
   };
+  useEffect(() => {
+    socket = io(ENDPOINT);
+    socket.emit("setup", user);
+    socket.on("connection", () => {
+      setSocketConnected(true);
+    });
+  }, []);
 
   useEffect(() => {
     fetchMessaage();
+    selectedChatCompare = selectedChat;
   }, [selectedChat]);
+
+  useEffect(() => {
+    socket.on("message recieved", (newMessageRecieved) => {
+      if (
+        !selectedChatCompare ||
+        selectedChatCompare._id !== newMessageRecieved.chat._id
+      ) {
+        //
+      } else {
+        setMessage([...message, newMessageRecieved]);
+      }
+    });
+  });
+
   return (
     <>
       {selectedChat ? (
@@ -121,7 +154,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
                 color="blue"
               />
             ) : (
-              <div className="flex flex-col overflow-y-scroll scroll-m-0">
+              <div className="message scroll-m-0 hover:scroll-m-0">
                 <ScrollableChat message={message} />
               </div>
             )}
